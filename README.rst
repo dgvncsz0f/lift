@@ -1,0 +1,142 @@
+====
+LIFT
+====
+
+A C-library of common data structures.
+
+INTRODUCTION
+============
+
+This library aims to provide established data structures
+implementation for C99.
+
+The motivation is not really the lack of such libraries [there is at
+least gnulib and glib that does exactly this] but rather to have a
+reason to implement such algorithms/data structures and experiment
+with generic programming in C.
+
+That said, my goal is studying and not creating the most efficient
+library.
+
+Consider youself warned. :-)
+
+DATA STRUCTURES
+===============
+
+Lists
+-----
+
++--------------------+-----------+
+| Operation          | llist.h   |
++--------------------+-----------+
+| list_head          | O(1)      |
++--------------------+-----------+
+| list_last          | O(1)      |
++--------------------+-----------+
+| list_get_data      | --        |
++--------------------+-----------+
+| list_at            | O(n)      |
++--------------------+-----------+
+| list_size          | O(1)      |
++--------------------+-----------+
+| list_empty         | O(1)      |
++--------------------+-----------+
+| list_append        | O(1)      |
++--------------------+-----------+
+| list_prepend       | O(1)      |
++--------------------+-----------+
+| list_insert_after  | O(1)      |
++--------------------+-----------+
+| list_insert_before | O(1)      |
++--------------------+-----------+
+| list_remove        | O(1)      |
++--------------------+-----------+
+| list_remove_range  | O(n)      |
++--------------------+-----------+
+| list_clear         | O(n)      |
++--------------------+-----------+
+| list_pop           | O(1)      |
++--------------------+-----------+
+| list_rpop          | O(1)      |
++--------------------+-----------+
+| list_next          | O(1)      |
++--------------------+-----------+
+| list_prev          | O(1)      |
++--------------------+-----------+
+
+DESIGN
+======
+
+There will be always a *public interface* and possibly many
+implementations. For instance, the `list.h` header provides the
+interface for *list* type whereas `llist.h` provides the
+implementation of a *linked list*. This way you can choose the
+implementation you want using the same interface.
+
+The implementations are responsible for initializing the generic
+structure. Thus you *must always use specific functions* to
+instantiate, for instance, list types. These are the `init` functions
+and there will be always their dual `destroy`.
+
+To give an example, this should given you a linked list implementation::
+
+  list_t *l = llist_init();
+
+Whereas in the following you should get an array::
+
+  list_t *l = alist_init();
+
+The memory management will be the pair `malloc/free` by
+default. However you may use a different one. This might be done be
+using using the `init_with` functions. As a matter effect the `init`
+functions use the `init_with` with `malloc` and `free` as arguments::
+
+  list_t *llist_init()
+  {
+    return(llist_init_with(malloc, free));
+  }
+
+All memory is guaranteed to be allocated and freed using these functions.
+
+BUILDING
+========
+
+The following will produce `${LIFTROOT}/dist/lib/liblift.so` and `${LIFTROOT}dist/lib/liblift.a` files::
+
+  $ make tests && make build
+
+EXAMPLES
+========
+
+llist.h::
+
+  $ cat test_llist.c
+  #include <lift/llist.h>
+  #include <stdio.h>
+
+  void main()
+  {
+    char e0[] = "foobar";
+    char e1[] = "foobaz";
+    list_t *l = llist_init();
+    list_node_t *it;
+
+    list_append(l, e0, /*free_f=*/NULL);
+    list_prepend(l, e1, /*free_f=*/NULL);
+
+    // list_head(l) == "foobaz"
+    // list_last(l) == "foobar"
+    for (it=list_head(l); it!=NULL; it=list_next(l, it))
+      printf("> %s\n", (char *) list_get_data(l, it));
+
+    llist_destroy(l);
+  }
+
+CHANGELOG
+=========
+
+::
+
+  v0.0.1
+
+* llist.h
