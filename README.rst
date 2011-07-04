@@ -1,6 +1,10 @@
-====
-LIFT
-====
+=============
+ _ _  __ _   
+| (_)/ _| |_ 
+| | | |_| __|
+| | |  _| |_ 
+|_|_|_|  \__|
+=============
 
 A C-library of common data structures.
 
@@ -63,6 +67,23 @@ Lists
 +--------------------+-----------+
 | list_prev          | O(1)      |
 +--------------------+-----------+
+
+TODO
+====
+
+* lists:
+** array list;
+** circular array list;
+** avl tree;
+** red black tree;
+
+* associative arrays:
+** sets;
+** maps;
+
+* algorithms:
+** searching;
+** sorting;
 
 DESIGN
 ======

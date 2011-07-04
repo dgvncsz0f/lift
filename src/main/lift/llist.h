@@ -23,12 +23,14 @@
 /* CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,   */
 /* OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE   */
 /* OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.            */
-
 #ifndef __LIFT_LLIST__
 #define __LIFT_LLIST__
 
 #include <lift/base.h>
 #include <lift/list.h>
+
+/*! Provides the implementation of a doubly-linked list.
+ */
 
 EXTERN_C_OPEN
 
