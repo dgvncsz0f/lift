@@ -1,12 +1,14 @@
-=============
- _ _  __ _   
-| (_)/ _| |_ 
-| | | |_| __|
-| | |  _| |_ 
-|_|_|_|  \__|
-=============
+::
 
-A C-library of common data structures.
+   _ _  __ _   
+  | (_)/ _| |_ 
+  | | | |_| __|
+  | | |  _| |_ 
+  |_|_|_|  \__|
+
+=====================================
+A C-library of common data structures
+=====================================
 
 INTRODUCTION
 ============
@@ -72,18 +74,19 @@ TODO
 ====
 
 * lists:
-** array list;
-** circular array list;
-** avl tree;
-** red black tree;
+
+ * array list;
+ * circular array list;
+ * avl tree;
+ * red black tree;
 
 * associative arrays:
-** sets;
-** maps;
 
-* algorithms:
-** searching;
-** sorting;
+ * sets;
+ * maps;
+ * algorithms:
+ * searching;
+ * sorting;
 
 DESIGN
 ======
@@ -125,33 +128,6 @@ BUILDING
 The following will produce `${LIFTROOT}/dist/lib/liblift.so` and `${LIFTROOT}dist/lib/liblift.a` files::
 
   $ make tests && make build
-
-EXAMPLES
-========
-
-llist.h::
-
-  $ cat test_llist.c
-  #include <lift/llist.h>
-  #include <stdio.h>
-
-  void main()
-  {
-    char e0[] = "foobar";
-    char e1[] = "foobaz";
-    list_t *l = llist_init();
-    list_node_t *it;
-
-    list_append(l, e0, /*free_f=*/NULL);
-    list_prepend(l, e1, /*free_f=*/NULL);
-
-    // list_head(l) == "foobaz"
-    // list_last(l) == "foobar"
-    for (it=list_head(l); it!=NULL; it=list_next(l, it))
-      printf("> %s\n", (char *) list_get_data(l, it));
-
-    llist_destroy(l);
-  }
 
 CHANGELOG
 =========
