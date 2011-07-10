@@ -26,12 +26,12 @@
 
 include Makefile.vars
 
-INC_FILES = $(wildcard src/main/lift/*.h) 
-SRC_FILES = $(wildcard src/main/lift/*.c)
+INC_FILES = $(wildcard src/main/lift/*.h) $(wildcard src/main/lift/algo/*.h) 
+SRC_FILES = $(wildcard src/main/lift/*.c) $(wildcard src/main/lift/algo/*.c)
 OBJ_FILES = $(addsuffix .o, $(basename $(SRC_FILES)))
 
-INC_FILES_TEST = $(wildcard src/test/lift_test/*.hh)
-SRC_FILES_TEST = $(wildcard src/test/lift_test/*.cc)
+INC_FILES_TEST = $(wildcard src/test/lift_test/*.hh) $(wildcard src/test/lift_test/algo/*.hh)
+SRC_FILES_TEST = $(wildcard src/test/lift_test/*.cc) $(wildcard src/test/lift_test/algo/*.cc)
 OBJ_FILES_TEST = $(addsuffix .o, $(basename $(SRC_FILES_TEST)))
 
 PRG_TESTS = run_tests
@@ -45,6 +45,8 @@ override CFLAGS   += -W -Wall -pedantic -Isrc/main -fPIC
 override LDFLAGS  += 
 
 compile: $(OBJ_FILES)
+
+ctags: 
 
 build: build-dynamic build-static
 
