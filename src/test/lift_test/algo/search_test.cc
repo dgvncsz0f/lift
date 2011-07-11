@@ -102,6 +102,20 @@ namespace lift_test
       llist_destroy(ll);
     }
 
+    TEST(least_elem_on_unordered_list_also_returns_the_minimum)
+    {
+      list_t *ll = llist_init();
+
+      list_append(ll, gvalue_init_from_int(3));
+      list_append(ll, gvalue_init_from_int(4));
+      list_append(ll, gvalue_init_from_int(1));
+      list_append(ll, gvalue_init_from_int(0));
+      list_append(ll, gvalue_init_from_int(2));
+
+      CHECK(list_prev(ll, list_last(ll)) == least_elem(ll, list_head(ll), list_last(ll)));
+      llist_destroy(ll);
+    }
+
     TEST(greatest_elem_on_the_entire_list_returns_the_maximum)
     {
       list_t *ll = llist_init();
@@ -113,6 +127,20 @@ namespace lift_test
       list_append(ll, gvalue_init_from_int(4));
 
       CHECK(list_last(ll) == greatest_elem(ll, list_head(ll), list_last(ll)));
+      llist_destroy(ll);
+    }
+
+    TEST(greatest_elem_on_unordered_list_also_returns_the_maximum)
+    {
+      list_t *ll = llist_init();
+
+      list_append(ll, gvalue_init_from_int(3));
+      list_append(ll, gvalue_init_from_int(4));
+      list_append(ll, gvalue_init_from_int(1));
+      list_append(ll, gvalue_init_from_int(0));
+      list_append(ll, gvalue_init_from_int(2));
+
+      CHECK(list_next(ll, list_head(ll)) == greatest_elem(ll, list_head(ll), list_last(ll)));
       llist_destroy(ll);
     }
 
