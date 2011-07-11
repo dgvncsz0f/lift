@@ -24,84 +24,60 @@
 /* OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE   */
 /* OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.            */
 
-#include <lift/algo/search.h>
+#ifndef __LIFT_GVALUE__
+#define __LIFT_GVALUE__
 
-static
-bool __is_least(const gvalue_t *a, const gvalue_t *b)
+#include <lift/base.h>
+
+EXTERN_C_OPEN
+
+typedef enum ord_e
 {
-  if (a == NULL)
-    return(false);
-  if (b == NULL)
-    return(true);
-  else
-    return(gvalue_compare(a, b) == LT);
-}
+  LT,
+  EQ,
+  GT
+} ord_e;
 
-static
-bool __is_greatest(const gvalue_t *a, const gvalue_t *b)
-{
-  if (a == NULL)
-    return(false);
-  if (b == NULL)
-    return(true);
-  else
-    return(gvalue_compare(a, b) == GT);
-}
+typedef struct gvalue_t gvalue_t;
+typedef ord_e (*compare_f)(void *a, void *b);
+typedef bool  (*equals_f)(void *a, void *b);
 
-static inline
-list_node_t *__find_elem(const list_t *l, list_node_t *start, list_node_t *end, bool (*f)(const gvalue_t *, const gvalue_t *))
-{
-  gvalue_t *tmp_a, *tmp_b;
-  list_node_t *found = NULL;
+gvalue_t *gvalue_init(void *v, free_f vfree);
+gvalue_t *gvalue_init_with(void *v, free_f vfree, init_f init, free_f destroy);
+gvalue_t *gvalue_init_with2(void *v, free_f vfree, init_f init, free_f destroy, equals_f equals, compare_f compare);
 
-  while (start!=NULL)
-  {
-    tmp_a = (found==NULL ? NULL : list_get_data(l, found));
-    tmp_b = list_get_data(l, start);
-    found = (f(tmp_a, tmp_b) ? found : start);
+gvalue_t *gvalue_init_from_char(char data);
+gvalue_t *gvalue_init_from_uchar(unsigned char data);
 
-    if (start == end)
-      break;
-    else
-      start = list_next(l, start);
-  }
+gvalue_t *gvalue_init_from_short(short data);
+gvalue_t *gvalue_init_from_ushort(unsigned short data);
 
-  return(found);
-}
+gvalue_t *gvalue_init_from_int(int data);
+gvalue_t *gvalue_init_from_uint(unsigned int data);
 
-int binary_search(const list_t *xs, const gvalue_t *x)
-{
-  int low  = 0;
-  int high = list_size(xs);
-  int mid, cmp;
-  list_node_t *tmp;
+gvalue_t *gvalue_init_from_long(long int data);
+gvalue_t *gvalue_init_from_ulong(unsigned long int data);
 
-  if (high == 0)
-    return(NOT_FOUND);
+gvalue_t *gvalue_init_from_double(double data);
 
-  while (low<=high)
-  {
-    mid = low + ((high-low) >> 1);
-    tmp = list_at(xs, mid);
-    cmp = gvalue_compare(x, list_get_data(xs, tmp));
+gvalue_t *gvalue_init_from_float(float data);
 
-    if (cmp == EQ)
-      return(mid);
-    else if (cmp == LT)
-      high = mid - 1;
-    else /* if (cmp == GT) */
-      low = mid + 1;
-  }
+gvalue_t *gvalue_init_from_string(const char *data);
 
-  return(NOT_FOUND);
-}
+void *gvalue_data(const gvalue_t *gv);
 
-list_node_t *least_elem(const list_t *l, list_node_t *start, list_node_t *end)
-{
-  return(__find_elem(l, start, end, __is_least));
-}
+ord_e gvalue_compare(const gvalue_t *a, const gvalue_t *b);
 
-list_node_t *greatest_elem(const list_t *l, list_node_t *start, list_node_t *end)
-{
-  return(__find_elem(l, start, end, __is_greatest));
-}
+ord_e gvalue_compare_data(const void *a, const gvalue_t *b);
+
+bool gvalue_equals(const gvalue_t *a, const gvalue_t *b);
+
+bool gvalue_equals_data(const void *a, const gvalue_t *b);
+
+/*! Free memory used by the value member using the suplied free_f function.
+ */
+void gvalue_destroy(gvalue_t *g);
+
+EXTERN_C_CLOSE
+
+#endif

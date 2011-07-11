@@ -37,14 +37,14 @@ typedef struct llist_t
 
 struct list_node_t
 {
-  void *data;
+  gvalue_t *data;
   free_f mem_free;
   list_node_t *next;
   list_node_t *prev;
 };
 
 static inline
-void *__get_f(const list_t *l, const list_node_t *e)
+gvalue_t *__get_f(const list_t *l, const list_node_t *e)
 {
   return(e->data);
 }
@@ -104,14 +104,13 @@ list_node_t *__prev_f(const list_t *l, const list_node_t *e)
 }
 
 static
-list_node_t *__node_init_f(const list_t *l, void *data, free_f f)
+list_node_t *__node_init_f(const list_t *l, gvalue_t *data)
 {
   llist_t *ll    = (llist_t *) l->impl;
   list_node_t *e = (list_node_t *) ll->mem_init(sizeof(list_node_t));
   ensure(e!=NULL, "memory error");
 
   e->data = data;
-  e->mem_free = f;
   e->next = NULL;
   e->prev = NULL;
 
@@ -122,8 +121,8 @@ static
 void __node_free_f(const list_t *l, list_node_t *e)
 {
   llist_t *ll = (llist_t *) l->impl;
-  if (e->data!=NULL && e->mem_free!=NULL)
-    e->mem_free(e->data);
+  if (e->data!=NULL)
+    gvalue_destroy(e->data);
   ll->mem_free(e);
 }
 

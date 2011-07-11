@@ -30,6 +30,7 @@
 #include <stdlib.h>
 #include <stdbool.h>
 #include <lift/base.h>
+#include <lift/gvalue.h>
 
 EXTERN_C_OPEN
 
@@ -40,10 +41,10 @@ typedef list_node_t *(*head_f)          (const list_t *);
 typedef list_node_t *(*last_f)          (const list_t *);
 typedef list_node_t *(*at_f)            (const list_t *, int);
 typedef int          (*size_f)          (const list_t *);
-typedef void        *(*get_f)           (const list_t *, const list_node_t *);
+typedef gvalue_t    *(*get_f)           (const list_t *, const list_node_t *);
 typedef list_node_t *(*next_f)          (const list_t *, const list_node_t *);
 typedef list_node_t *(*prev_f)          (const list_t *, const list_node_t *);
-typedef list_node_t *(*node_init_f)     (const list_t *, void *data, free_f);
+typedef list_node_t *(*node_init_f)     (const list_t *, gvalue_t *data);
 typedef void         (*node_free_f)     (const list_t *, list_node_t *);
 typedef void         (*remove_f)        (const list_t *, list_node_t *);
 typedef void         (*insert_after_f)  (list_t *, list_node_t *, list_node_t *);
@@ -95,7 +96,7 @@ list_node_t *list_last(const list_t *l);
  * \param e The node to get the value from;
  * \return The data.
  */
-void *list_get_data(const list_t *l, const list_node_t *e);
+gvalue_t *list_get_data(const list_t *l, const list_node_t *e);
 
 /*! Returns the element at a given position.
  *
@@ -123,10 +124,9 @@ bool list_empty(const list_t *l);
  *
  * \param l The linked list;
  * \param data The data to insert;
- * \param The function to free memory (might be NULL);
  * \return true=success, false=failure.
  */
-bool list_append(list_t *l, void *data, free_f f);
+bool list_append(list_t *l, gvalue_t *data);
 
 /*! Inserts a new element after at the head. This is the same as
  * list_insert_before(l, list_head(l), data, f);
@@ -134,30 +134,27 @@ bool list_append(list_t *l, void *data, free_f f);
  * \param l The linked list;
  * \param p The position to insert element after.
  * \param data The data to insert;
- * \param The function to free memory (might be NULL);
  * \return true=success, false=failure.
  */
-bool list_prepend(list_t *l, void *data, free_f f);
+bool list_prepend(list_t *l, gvalue_t *data);
 
 /*! Inserts a new element after a given position.
  *
  * \param l The list container. 
  * \param e The element that will be the predecessor of the new one.
  * \param data The data to insert;
- * \param f The function to free memory (might be NULL);
  * \return true=success, false=failure.
  */
-bool list_insert_after(list_t *l, list_node_t *e, void *data, free_f f);
+bool list_insert_after(list_t *l, list_node_t *e, gvalue_t *data);
 
 /*! Inserts a new element before a given position.
  *
  * \param l The list container. 
  * \param e The element that will be the successor of the new one.
  * \param data The data to insert;
- * \param f The function to free memory (might be NULL);
  * \return true=success, false=failure.
  */
-bool list_insert_before(list_t *l, list_node_t *e, void *data, free_f f);
+bool list_insert_before(list_t *l, list_node_t *e, gvalue_t *data);
 
 /*! Removes an element from the list.
  *

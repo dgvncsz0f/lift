@@ -30,16 +30,6 @@
 #include <lift/algo/search.h>
 #include <UnitTest++.h>
 
-namespace
-{
-  int __myint_cmp(const void *pa, const void *pb)
-  {
-    int a = *((const int*) pa);
-    int b = *((const int*) pb);
-    return(a - b);
-  }
-}
-
 namespace lift_test
 {
 
@@ -48,42 +38,91 @@ namespace lift_test
 
     TEST(binary_search_should_return_the_index_of_the_element_when_such_exists)
     {
-      int a=0, b=1, c=2, d=3, e=4;
+      gvalue_t *elem = gvalue_init_from_int(1);
       // not efficient but any list will do it
       list_t *ll = llist_init();
 
-      list_append(ll, &a, NULL);
-      list_append(ll, &b, NULL);
-      list_append(ll, &c, NULL);
-      list_append(ll, &d, NULL);
-      list_append(ll, &e, NULL);
+      list_append(ll, gvalue_init_from_int(0));
+      list_append(ll, gvalue_init_from_int(1));
+      list_append(ll, gvalue_init_from_int(2));
+      list_append(ll, gvalue_init_from_int(3));
+      list_append(ll, gvalue_init_from_int(4));
 
-      CHECK(1 == binary_search(ll, &b, __myint_cmp));
+      CHECK(1 == binary_search(ll, elem));
+      llist_destroy(ll);
+      gvalue_destroy(elem);
     }
 
     TEST(binary_search_should_return_NOT_FOUND_if_the_element_is_not_on_the_list)
     {
-      int a=0, b=1, c=2, d=3, e=4;
+      gvalue_t *elem = gvalue_init_from_int(4);
       // not efficient but any list will do it
       list_t *ll = llist_init();
 
-      list_append(ll, &a, NULL);
-      list_append(ll, &b, NULL);
-      list_append(ll, &c, NULL);
-      list_append(ll, &d, NULL);
+      list_append(ll, gvalue_init_from_int(0));
+      list_append(ll, gvalue_init_from_int(1));
+      list_append(ll, gvalue_init_from_int(2));
+      list_append(ll, gvalue_init_from_int(3));
 
-      CHECK(NOT_FOUND == binary_search(ll, &e, __myint_cmp));
+      CHECK(NOT_FOUND == binary_search(ll, elem));
+      llist_destroy(ll);
+      gvalue_destroy(elem);
     }
 
     TEST(binary_search_should_return_NOT_FOUND_when_the_list_is_empty)
     {
-      int a=0;
+      gvalue_t *elem = gvalue_init_from_int(0);
       // not efficient but any list will do it
       list_t *ll = llist_init();
 
-      CHECK(NOT_FOUND == binary_search(ll, &a, __myint_cmp));
+      CHECK(NOT_FOUND == binary_search(ll, elem));
+      llist_destroy(ll);
+      gvalue_destroy(elem);
     }
 
+    TEST(least_elem_on_the_entire_list_returns_the_minimum)
+    {
+      list_t *ll = llist_init();
+
+      list_append(ll, gvalue_init_from_int(0));
+      list_append(ll, gvalue_init_from_int(1));
+      list_append(ll, gvalue_init_from_int(2));
+      list_append(ll, gvalue_init_from_int(3));
+      list_append(ll, gvalue_init_from_int(4));
+
+      CHECK(list_head(ll) == least_elem(ll, list_head(ll), list_last(ll)));
+      llist_destroy(ll);
+    }
+
+    TEST(least_elem_on_the_empty_list_returns_NULL)
+    {
+      list_t *ll = llist_init();
+
+      CHECK(NULL == least_elem(ll, list_head(ll), list_last(ll)));
+      llist_destroy(ll);
+    }
+
+    TEST(greatest_elem_on_the_entire_list_returns_the_maximum)
+    {
+      list_t *ll = llist_init();
+
+      list_append(ll, gvalue_init_from_int(0));
+      list_append(ll, gvalue_init_from_int(1));
+      list_append(ll, gvalue_init_from_int(2));
+      list_append(ll, gvalue_init_from_int(3));
+      list_append(ll, gvalue_init_from_int(4));
+
+      CHECK(list_last(ll) == greatest_elem(ll, list_head(ll), list_last(ll)));
+      llist_destroy(ll);
+    }
+
+    TEST(greatest_elem_on_the_empty_list_returns_NULL)
+    {
+      list_t *ll = llist_init();
+
+      CHECK(NULL == greatest_elem(ll, list_head(ll), list_last(ll)));
+      llist_destroy(ll);
+    }
   }
 
 }

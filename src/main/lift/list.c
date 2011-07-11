@@ -27,30 +27,30 @@
 #include <lift/list.h>
 
 inline
-bool list_append(list_t *l, void *data, free_f f)
+bool list_append(list_t *l, gvalue_t *data)
 {
-  return(list_insert_after(l, list_last(l), data, f));
+  return(list_insert_after(l, list_last(l), data));
 }
 
 inline
-bool list_prepend(list_t *l, void *data, free_f f)
+bool list_prepend(list_t *l, gvalue_t *data)
 {
-  return(list_insert_before(l, list_head(l), data, f));
+  return(list_insert_before(l, list_head(l), data));
 }
 
 inline
-bool list_insert_after(list_t *l, list_node_t *e, void *data, free_f f)
+bool list_insert_after(list_t *l, list_node_t *e, gvalue_t *data)
 {
-  list_node_t *elem = l->node_init(l, data, f);
+  list_node_t *elem = l->node_init(l, data);
   if (elem != NULL)
     l->insert_after(l, e, elem);
   return(elem != NULL);
 }
 
 inline
-bool list_insert_before(list_t *l, list_node_t *e, void *data, free_f f)
+bool list_insert_before(list_t *l, list_node_t *e, gvalue_t *data)
 {
-  list_node_t *elem = l->node_init(l, data, f);
+  list_node_t *elem = l->node_init(l, data);
   if (elem != NULL)
     l->insert_before(l, e, elem);
   return(elem != NULL);
@@ -77,7 +77,7 @@ list_node_t *list_at(const list_t *l, int o_)
 }
 
 inline
-void *list_get_data(const list_t *l, const list_node_t *e)
+gvalue_t *list_get_data(const list_t *l, const list_node_t *e)
 {
   return(l->get(l, e));
 }
@@ -103,9 +103,14 @@ void list_remove(list_t *l, list_node_t *e)
 
 void list_remove_range(list_t *l, list_node_t *s, list_node_t *e)
 {
-  list_remove(l, s);
-  if (s != e)
-    list_remove_range(l, list_next(l, s), e);
+  list_node_t *tmp;
+  while (s != e)
+  {
+    tmp = s;
+    s   = list_next(l, s);
+    list_remove(l, tmp);
+  };
+  list_remove(l, e);
 }
 
 inline
