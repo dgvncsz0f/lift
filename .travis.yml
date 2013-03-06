@@ -4,6 +4,6 @@ compiler:
   - gcc
   - clang
 
-install: make .boostrap
+install: make .bootstrap
 
 script: make test
