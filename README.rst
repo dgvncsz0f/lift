@@ -10,6 +10,9 @@
 A C-library of common data structures
 =====================================
 
+.. image:: https://travis-ci.org/dgvncsz0f/lift.png?branch=master
+  :target: https://travis-ci.org/dgvncsz0f/lift
+
 INTRODUCTION
 ============
 
@@ -104,30 +107,23 @@ and there will be always their dual `destroy`.
 
 To give an example, this should given you a linked list implementation::
 
-  list_t *l = llist_init();
+  list_t *l = llist_init(type_int());
 
 Whereas in the following you should get an array::
 
-  list_t *l = alist_init();
+  list_t *l = alist_init(type_int());
 
 The memory management will be the pair `malloc/free` by
 default. However you may use a different one. This might be done be
 using using the `init_with` functions. As a matter effect the `init`
 functions use the `init_with` with `malloc` and `free` as arguments::
 
-  list_t *llist_init()
+  list_t *llist_init(type_t t)
   {
-    return(llist_init_with(malloc, free));
+    return(llist_init_with(t, malloc, free));
   }
 
 All memory is guaranteed to be allocated and freed using these functions.
-
-BUILDING
-========
-
-The following will produce `${LIFTROOT}/dist/lib/liblift.so` and `${LIFTROOT}dist/lib/liblift.a` files::
-
-  $ make tests && make build
 
 CHANGELOG
 =========
