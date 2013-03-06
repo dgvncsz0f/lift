@@ -38,57 +38,54 @@ namespace lift_test
 
     TEST(binary_search_should_return_the_index_of_the_element_when_such_exists)
     {
-      gvalue_t *elem = gvalue_init_from_int(1);
-      // not efficient but any list will do it
-      list_t *ll = llist_init();
+      int elem    = 1,
+          tmp;
+      list_t *ll  = llist_init(type_int());
 
-      list_append(ll, gvalue_init_from_int(0));
-      list_append(ll, gvalue_init_from_int(1));
-      list_append(ll, gvalue_init_from_int(2));
-      list_append(ll, gvalue_init_from_int(3));
-      list_append(ll, gvalue_init_from_int(4));
+      tmp = 0; list_append(ll, &tmp);
+      tmp = 1; list_append(ll, &tmp);
+      tmp = 2; list_append(ll, &tmp);
+      tmp = 3; list_append(ll, &tmp);
+      tmp = 4; list_append(ll, &tmp);
 
-      CHECK(1 == binary_search(ll, elem));
+      CHECK(1 == binary_search(ll, &elem));
       llist_destroy(ll);
-      gvalue_destroy(elem);
     }
 
     TEST(binary_search_should_return_NOT_FOUND_if_the_element_is_not_on_the_list)
     {
-      gvalue_t *elem = gvalue_init_from_int(4);
-      // not efficient but any list will do it
-      list_t *ll = llist_init();
+      int elem    = 4,
+          tmp;
+      list_t *ll  = llist_init(type_int());
 
-      list_append(ll, gvalue_init_from_int(0));
-      list_append(ll, gvalue_init_from_int(1));
-      list_append(ll, gvalue_init_from_int(2));
-      list_append(ll, gvalue_init_from_int(3));
+      tmp = 0; list_append(ll, &tmp);
+      tmp = 1; list_append(ll, &tmp);
+      tmp = 2; list_append(ll, &tmp);
+      tmp = 3; list_append(ll, &tmp);
 
-      CHECK(NOT_FOUND == binary_search(ll, elem));
+      CHECK(NOT_FOUND == binary_search(ll, &elem));
       llist_destroy(ll);
-      gvalue_destroy(elem);
     }
 
     TEST(binary_search_should_return_NOT_FOUND_when_the_list_is_empty)
     {
-      gvalue_t *elem = gvalue_init_from_int(0);
-      // not efficient but any list will do it
-      list_t *ll = llist_init();
+      int elem    = 0;
+      list_t *ll  = llist_init(type_int());
 
-      CHECK(NOT_FOUND == binary_search(ll, elem));
+      CHECK(NOT_FOUND == binary_search(ll, &elem));
       llist_destroy(ll);
-      gvalue_destroy(elem);
     }
 
     TEST(least_elem_on_the_entire_list_returns_the_minimum)
     {
-      list_t *ll = llist_init();
+      int tmp;
+      list_t *ll  = llist_init(type_int());
 
-      list_append(ll, gvalue_init_from_int(0));
-      list_append(ll, gvalue_init_from_int(1));
-      list_append(ll, gvalue_init_from_int(2));
-      list_append(ll, gvalue_init_from_int(3));
-      list_append(ll, gvalue_init_from_int(4));
+      tmp = 0; list_append(ll, &tmp);
+      tmp = 1; list_append(ll, &tmp);
+      tmp = 2; list_append(ll, &tmp);
+      tmp = 3; list_append(ll, &tmp);
+      tmp = 4; list_append(ll, &tmp);
 
       CHECK(list_head(ll) == least_elem(ll, list_head(ll), list_last(ll)));
       llist_destroy(ll);
@@ -96,7 +93,7 @@ namespace lift_test
 
     TEST(least_elem_on_the_empty_list_returns_NULL)
     {
-      list_t *ll = llist_init();
+      list_t *ll  = llist_init(type_int());
 
       CHECK(NULL == least_elem(ll, list_head(ll), list_last(ll)));
       llist_destroy(ll);
@@ -104,13 +101,14 @@ namespace lift_test
 
     TEST(least_elem_on_unordered_list_also_returns_the_minimum)
     {
-      list_t *ll = llist_init();
+      int tmp;
+      list_t *ll = llist_init(type_int());
 
-      list_append(ll, gvalue_init_from_int(3));
-      list_append(ll, gvalue_init_from_int(4));
-      list_append(ll, gvalue_init_from_int(1));
-      list_append(ll, gvalue_init_from_int(0));
-      list_append(ll, gvalue_init_from_int(2));
+      tmp = 3; list_append(ll, &tmp);
+      tmp = 4; list_append(ll, &tmp);
+      tmp = 1; list_append(ll, &tmp);
+      tmp = 0; list_append(ll, &tmp);
+      tmp = 2; list_append(ll, &tmp);
 
       CHECK(list_prev(ll, list_last(ll)) == least_elem(ll, list_head(ll), list_last(ll)));
       llist_destroy(ll);
@@ -118,13 +116,14 @@ namespace lift_test
 
     TEST(greatest_elem_on_the_entire_list_returns_the_maximum)
     {
-      list_t *ll = llist_init();
+      int tmp;
+      list_t *ll = llist_init(type_int());
 
-      list_append(ll, gvalue_init_from_int(0));
-      list_append(ll, gvalue_init_from_int(1));
-      list_append(ll, gvalue_init_from_int(2));
-      list_append(ll, gvalue_init_from_int(3));
-      list_append(ll, gvalue_init_from_int(4));
+      tmp = 0; list_append(ll, &tmp);
+      tmp = 1; list_append(ll, &tmp);
+      tmp = 2; list_append(ll, &tmp);
+      tmp = 3; list_append(ll, &tmp);
+      tmp = 4; list_append(ll, &tmp);
 
       CHECK(list_last(ll) == greatest_elem(ll, list_head(ll), list_last(ll)));
       llist_destroy(ll);
@@ -132,13 +131,14 @@ namespace lift_test
 
     TEST(greatest_elem_on_unordered_list_also_returns_the_maximum)
     {
-      list_t *ll = llist_init();
+      int tmp;
+      list_t *ll = llist_init(type_int());
 
-      list_append(ll, gvalue_init_from_int(3));
-      list_append(ll, gvalue_init_from_int(4));
-      list_append(ll, gvalue_init_from_int(1));
-      list_append(ll, gvalue_init_from_int(0));
-      list_append(ll, gvalue_init_from_int(2));
+      tmp = 3; list_append(ll, &tmp);
+      tmp = 4; list_append(ll, &tmp);
+      tmp = 1; list_append(ll, &tmp);
+      tmp = 0; list_append(ll, &tmp);
+      tmp = 2; list_append(ll, &tmp);
 
       CHECK(list_next(ll, list_head(ll)) == greatest_elem(ll, list_head(ll), list_last(ll)));
       llist_destroy(ll);
@@ -146,7 +146,7 @@ namespace lift_test
 
     TEST(greatest_elem_on_the_empty_list_returns_NULL)
     {
-      list_t *ll = llist_init();
+      list_t *ll = llist_init(type_int());
 
       CHECK(NULL == greatest_elem(ll, list_head(ll), list_last(ll)));
       llist_destroy(ll);

@@ -36,7 +36,7 @@ namespace lift_test
 
   TEST(list_append_on_an_empty_list_defines_both_head_and_last)
   {
-    list_t *l = llist_init();
+    list_t *l = llist_init(type_int());
     list_append(l, NULL);
     CHECK(NULL != list_head(l));
     CHECK(list_head(l) == list_last(l));
@@ -45,7 +45,7 @@ namespace lift_test
 
   TEST(list_append_preserves_head)
   {
-    list_t *l = llist_init();
+    list_t *l = llist_init(type_int());
     list_append(l, NULL);
     list_node_t *e = list_head(l);
 
@@ -60,7 +60,7 @@ namespace lift_test
 
   TEST(list_prepend_on_an_empty_defines_both_head_and_last)
   {
-    list_t *l = llist_init();
+    list_t *l = llist_init(type_int());
     list_prepend(l, NULL);
     CHECK(NULL != list_last(l));
     CHECK(list_last(l) == list_head(l));
@@ -69,7 +69,7 @@ namespace lift_test
 
   TEST(list_prepend_preserves_tail)
   {
-    list_t *l = llist_init();
+    list_t *l = llist_init(type_int());
     list_prepend(l, NULL);
     list_node_t *e = list_last(l);
 
@@ -83,7 +83,7 @@ namespace lift_test
   // head
   TEST(list_head_returns_NULL_when_the_list_is_empty)
   {
-    list_t *l = llist_init();
+    list_t *l = llist_init(type_int());
     CHECK(NULL == list_head(l));
     llist_destroy(l);
   }
@@ -91,14 +91,14 @@ namespace lift_test
   // last
   TEST(list_last_returns_NULL_when_the_list_is_empty)
   {
-    list_t *l = llist_init();
+    list_t *l = llist_init(type_int());
     CHECK(NULL == list_last(l));
     llist_destroy(l);
   }
 
   TEST(list_last_and_list_head_are_the_same_when_list_is_singleton)
   {
-    list_t *l = llist_init();
+    list_t *l = llist_init(type_int());
     list_append(l, NULL);
     CHECK(list_head(l) == list_last(l));
     llist_destroy(l);
@@ -107,14 +107,14 @@ namespace lift_test
   // at
   TEST(list_at_returns_NULL_if_list_is_empty)
   {
-    list_t *l = llist_init();
+    list_t *l = llist_init(type_int());
     CHECK(NULL == list_at(l, 0));
     llist_destroy(l);
   }
 
   TEST(list_at_returns_the_element_at_a_given_index)
   {
-    list_t *l = llist_init();
+    list_t *l = llist_init(type_int());
     list_append(l, NULL);
     list_append(l, NULL);
     CHECK(list_at(l, 0) == list_head(l));
@@ -124,7 +124,7 @@ namespace lift_test
 
   TEST(list_at_works_with_numbers_that_exceeds_list_size)
   {
-    list_t *l = llist_init();
+    list_t *l = llist_init(type_int());
     list_append(l, NULL);
     list_append(l, NULL);
 
@@ -136,7 +136,7 @@ namespace lift_test
 
   TEST(list_at_works_with_negative_numbers)
   {
-    list_t *l = llist_init();
+    list_t *l = llist_init(type_int());
     list_append(l, NULL);
     list_append(l, NULL);
 
@@ -148,7 +148,7 @@ namespace lift_test
 
   TEST(list_at_works_with_negative_numbers_that_exceeds_list_size)
   {
-    list_t *l = llist_init();
+    list_t *l = llist_init(type_int());
     list_append(l, NULL);
     list_append(l, NULL);
 
@@ -161,7 +161,7 @@ namespace lift_test
   // size
   TEST(list_size_returns_zero_when_list_is_empty)
   {
-    list_t *l = llist_init();
+    list_t *l = llist_init(type_int());
 
     CHECK(0 == list_size(l));
 
@@ -170,7 +170,7 @@ namespace lift_test
 
   TEST(list_size_returns_the_correct_number_of_elements)
   {
-    list_t *l = llist_init();
+    list_t *l = llist_init(type_int());
     list_append(l, NULL);
     list_append(l, NULL);
 
@@ -182,7 +182,7 @@ namespace lift_test
   // empty
   TEST(list_empty_returns_true_when_list_is_empty)
   {
-    list_t *l = llist_init();
+    list_t *l = llist_init(type_int());
 
     CHECK(list_empty(l));
 
@@ -191,7 +191,7 @@ namespace lift_test
 
   TEST(list_insert_after_with_head_does_not_change_head_nor_last)
   {
-    list_t *l = llist_init();
+    list_t *l = llist_init(type_int());
     list_append(l, NULL);
     list_append(l, NULL);
 
@@ -208,7 +208,7 @@ namespace lift_test
 
   TEST(list_insert_after_with_the_last_element_changes_the_tail)
   {
-    list_t *l = llist_init();
+    list_t *l = llist_init(type_int());
     list_append(l, NULL);
     list_append(l, NULL);
 
@@ -226,7 +226,7 @@ namespace lift_test
   // list_insert_before
   TEST(list_insert_before_with_head_changes_the_head)
   {
-    list_t *l = llist_init();
+    list_t *l = llist_init(type_int());
     list_append(l, NULL);
     list_append(l, NULL);
 
@@ -243,7 +243,7 @@ namespace lift_test
 
   TEST(list_insert_before_with_tail_preserves_both_head_and_tail)
   {
-    list_t *l = llist_init();
+    list_t *l = llist_init(type_int());
     list_append(l, NULL);
     list_append(l, NULL);
 
@@ -262,7 +262,7 @@ namespace lift_test
 
   TEST(list_remove_reduces_list_length)
   {
-    list_t *l = llist_init();
+    list_t *l = llist_init(type_int());
     list_append(l, NULL);
 
     list_remove(l, list_head(l));
@@ -273,7 +273,7 @@ namespace lift_test
 
   TEST(list_remove_changes_head_when_this_is_removed)
   {
-    list_t *l = llist_init();
+    list_t *l = llist_init(type_int());
     list_append(l, NULL);
     list_append(l, NULL);
 
@@ -289,7 +289,7 @@ namespace lift_test
 
   TEST(list_remove_changes_last_when_this_is_removed)
   {
-    list_t *l = llist_init();
+    list_t *l = llist_init(type_int());
     list_append(l, NULL);
     list_append(l, NULL);
 
@@ -305,7 +305,7 @@ namespace lift_test
 
   TEST(list_remove_preserves_both_head_and_last_if_element_is_in_the_middle)
   {
-    list_t *l = llist_init();
+    list_t *l = llist_init(type_int());
     list_append(l, NULL);
     list_append(l, NULL);
     list_append(l, NULL);
@@ -327,12 +327,13 @@ namespace lift_test
 
   TEST(list_get_data_returns_it_without_modifications)
   {
-    list_t *l = llist_init();
+    int tmp = 10;
+    list_t *l = llist_init(type_int());
 
-    list_append(l, gvalue_init_from_int(10));
-    gvalue_t *gv = list_get_data(l, list_head(l));
+    list_append(l, &tmp);
+    const int *v = (const int *) list_get_data(l, list_head(l));
 
-    CHECK(10 == *((int *) gvalue_data(gv)));
+    CHECK(10 == *v);
 
     llist_destroy(l);
   }
@@ -341,7 +342,7 @@ namespace lift_test
 
   TEST(list_clear_works_on_empty_lists)
   {
-    list_t *l = llist_init();
+    list_t *l = llist_init(type_int());
 
     list_clear(l);
     CHECK(0 == list_size(l));
@@ -351,7 +352,7 @@ namespace lift_test
 
   TEST(list_clear_erases_all_elements)
   {
-    list_t *l = llist_init();
+    list_t *l = llist_init(type_int());
     list_append(l, NULL);
     list_append(l, NULL);
     list_append(l, NULL);
@@ -368,7 +369,7 @@ namespace lift_test
   
   TEST(remove_range_removes_inclusive_the_start_and_end_elements)
   {
-    list_t *l = llist_init();
+    list_t *l = llist_init(type_int());
     list_append(l, NULL);
     list_append(l, NULL);
 
@@ -382,7 +383,7 @@ namespace lift_test
 
   TEST(remove_range_should_clear_singleton_lists)
   {
-    list_t *l = llist_init();
+    list_t *l = llist_init(type_int());
     list_append(l, NULL);
     
     list_remove_range(l, list_head(l), list_last(l));
@@ -393,7 +394,7 @@ namespace lift_test
 
   TEST(remove_range_should_not_touch_the_head_nor_last_if_the_range_does_not_include_them)
   {
-    list_t *l = llist_init();
+    list_t *l = llist_init(type_int());
     list_append(l, NULL);
     list_append(l, NULL);
     list_append(l, NULL);
@@ -413,7 +414,7 @@ namespace lift_test
 
   TEST(list_pop_works_on_empty_lists)
   {
-    list_t *l = llist_init();
+    list_t *l = llist_init(type_int());
 
     list_pop(l);
     CHECK(0 == list_size(l));
@@ -423,7 +424,7 @@ namespace lift_test
 
   TEST(list_pop_changes_head_for_non_empty_lists)
   {
-    list_t *l = llist_init();
+    list_t *l = llist_init(type_int());
     list_append(l, NULL);
     list_append(l, NULL);
 
@@ -437,7 +438,7 @@ namespace lift_test
 
   TEST(list_pop_reduces_list_length)
   {
-    list_t *l = llist_init();
+    list_t *l = llist_init(type_int());
     list_append(l, NULL);
 
     list_pop(l);
@@ -450,7 +451,7 @@ namespace lift_test
 
   TEST(list_rpop_works_on_empty_lists)
   {
-    list_t *l = llist_init();
+    list_t *l = llist_init(type_int());
 
     list_rpop(l);
     CHECK(0 == list_size(l));
@@ -460,7 +461,7 @@ namespace lift_test
 
   TEST(list_rpop_changes_last_for_non_empty_lists)
   {
-    list_t *l = llist_init();
+    list_t *l = llist_init(type_int());
     list_append(l, NULL);
     list_append(l, NULL);
 
@@ -474,7 +475,7 @@ namespace lift_test
 
   TEST(list_rpop_reduces_list_length)
   {
-    list_t *l = llist_init();
+    list_t *l = llist_init(type_int());
     list_append(l, NULL);
 
     list_rpop(l);
@@ -487,7 +488,7 @@ namespace lift_test
 
   TEST(list_next_returns_NULL_on_last_even_if_the_list_is_empty)
   {
-    list_t *l = llist_init();
+    list_t *l = llist_init(type_int());
 
     CHECK(NULL == list_next(l, list_last(l)));
 
@@ -496,7 +497,7 @@ namespace lift_test
 
   TEST(list_next_returns_NULL_on_last)
   {
-    list_t *l = llist_init();
+    list_t *l = llist_init(type_int());
     list_append(l, NULL);
 
     CHECK(NULL == list_next(l, list_last(l)));
@@ -506,7 +507,7 @@ namespace lift_test
 
   TEST(list_next_returns_elements_in_insertion_order)
   {
-    list_t *l = llist_init();
+    list_t *l = llist_init(type_int());
     list_append(l, NULL);
     list_append(l, NULL);
 
@@ -519,7 +520,7 @@ namespace lift_test
 
   TEST(list_prev_returns_NULL_on_last_even_if_the_list_is_empty)
   {
-    list_t *l = llist_init();
+    list_t *l = llist_init(type_int());
 
     CHECK(NULL == list_prev(l, list_head(l)));
 
@@ -528,7 +529,7 @@ namespace lift_test
 
   TEST(list_head_returns_NULL_on_head)
   {
-    list_t *l = llist_init();
+    list_t *l = llist_init(type_int());
     list_append(l, NULL);
 
     CHECK(NULL == list_prev(l, list_head(l)));
@@ -538,7 +539,7 @@ namespace lift_test
 
   TEST(list_head_returns_elements_in_insertion_order)
   {
-    list_t *l = llist_init();
+    list_t *l = llist_init(type_int());
     list_append(l, NULL);
     list_append(l, NULL);
 

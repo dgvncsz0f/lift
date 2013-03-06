@@ -30,47 +30,36 @@
 #include <stdlib.h>
 #include <stdbool.h>
 #include <lift/base.h>
-#include <lift/gvalue.h>
+#include <lift/type.h>
 
 EXTERN_C_OPEN
 
 typedef struct list_t list_t;
 typedef struct list_node_t list_node_t;
 
-typedef list_node_t *(*head_f)          (const list_t *);
-typedef list_node_t *(*last_f)          (const list_t *);
-typedef list_node_t *(*at_f)            (const list_t *, int);
-typedef int          (*size_f)          (const list_t *);
-typedef gvalue_t    *(*get_f)           (const list_t *, const list_node_t *);
-typedef list_node_t *(*next_f)          (const list_t *, const list_node_t *);
-typedef list_node_t *(*prev_f)          (const list_t *, const list_node_t *);
-typedef list_node_t *(*node_init_f)     (const list_t *, gvalue_t *data);
-typedef void         (*node_free_f)     (const list_t *, list_node_t *);
-typedef void         (*remove_f)        (const list_t *, list_node_t *);
-typedef void         (*insert_after_f)  (list_t *, list_node_t *, list_node_t *);
-typedef void         (*insert_before_f) (list_t *, list_node_t *, list_node_t *);
-
 struct list_t
 {
+  type_t type;
+
   /* Querying */
-  head_f head;
-  last_f last;
-  at_f at;
-  size_f size;
-  get_f get;
+  list_node_t *(*head)          (const list_t *);
+  list_node_t *(*last)          (const list_t *);
+  list_node_t *(*at)            (const list_t *, int);
+  int          (*size)          (const list_t *);
+  const void  *(*get)           (const list_t *, const list_node_t *);
 
   /* iterator */
-  next_f next;
-  prev_f prev;
+  list_node_t *(*next)          (const list_t *, const list_node_t *);
+  list_node_t *(*prev)          (const list_t *, const list_node_t *);
 
   /* memory management */
-  node_init_f node_init;
-  node_free_f node_free;
+  list_node_t *(*node_init)     (const list_t *, const void *data);
+  void         (*node_free)     (const list_t *, list_node_t *);
 
   /* updates */
-  remove_f remove;
-  insert_after_f insert_after;
-  insert_before_f insert_before;
+  void         (*remove)        (const list_t *, list_node_t *);         
+  void         (*insert_after)  (list_t *, list_node_t *, list_node_t *);
+  void         (*insert_before) (list_t *, list_node_t *, list_node_t *);
 
   /* implementation specifics */
   void *impl;
@@ -96,7 +85,7 @@ list_node_t *list_last(const list_t *l);
  * \param e The node to get the value from;
  * \return The data.
  */
-gvalue_t *list_get_data(const list_t *l, const list_node_t *e);
+const void *list_get_data(const list_t *l, const list_node_t *e);
 
 /*! Returns the element at a given position.
  *
@@ -126,7 +115,7 @@ bool list_empty(const list_t *l);
  * \param data The data to insert;
  * \return true=success, false=failure.
  */
-bool list_append(list_t *l, gvalue_t *data);
+bool list_append(list_t *l, const void *data);
 
 /*! Inserts a new element after at the head. This is the same as
  * list_insert_before(l, list_head(l), data, f);
@@ -136,7 +125,7 @@ bool list_append(list_t *l, gvalue_t *data);
  * \param data The data to insert;
  * \return true=success, false=failure.
  */
-bool list_prepend(list_t *l, gvalue_t *data);
+bool list_prepend(list_t *l, const void *data);
 
 /*! Inserts a new element after a given position.
  *
@@ -145,7 +134,7 @@ bool list_prepend(list_t *l, gvalue_t *data);
  * \param data The data to insert;
  * \return true=success, false=failure.
  */
-bool list_insert_after(list_t *l, list_node_t *e, gvalue_t *data);
+bool list_insert_after(list_t *l, list_node_t *e, const void *data);
 
 /*! Inserts a new element before a given position.
  *
@@ -154,7 +143,7 @@ bool list_insert_after(list_t *l, list_node_t *e, gvalue_t *data);
  * \param data The data to insert;
  * \return true=success, false=failure.
  */
-bool list_insert_before(list_t *l, list_node_t *e, gvalue_t *data);
+bool list_insert_before(list_t *l, list_node_t *e, const void *data);
 
 /*! Removes an element from the list.
  *

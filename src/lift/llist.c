@@ -28,6 +28,7 @@
 
 typedef struct llist_t
 {
+  type_t type;
   list_node_t *head;
   list_node_t *last;
   int size;
@@ -37,17 +38,15 @@ typedef struct llist_t
 
 struct list_node_t
 {
-  gvalue_t *data;
+  void *data;
   free_f mem_free;
   list_node_t *next;
   list_node_t *prev;
 };
 
 static inline
-gvalue_t *__get_f(const list_t *l, const list_node_t *e)
-{
-  return(e->data);
-}
+const void *__get_f(const list_t *l, const list_node_t *e)
+{ return(e->data); }
 
 static inline
 int __size_f(const list_t *l)
@@ -104,15 +103,17 @@ list_node_t *__prev_f(const list_t *l, const list_node_t *e)
 }
 
 static
-list_node_t *__node_init_f(const list_t *l, gvalue_t *data)
+list_node_t *__node_init_f(const list_t *l, const void *data)
 {
   llist_t *ll    = (llist_t *) l->impl;
   list_node_t *e = (list_node_t *) ll->mem_init(sizeof(list_node_t));
-  ensure(e!=NULL, "memory error");
 
-  e->data = data;
-  e->next = NULL;
-  e->prev = NULL;
+  if (e != NULL)
+  {
+    e->data = type_dup(&l->type, data, ll->mem_init);
+    e->next = NULL;
+    e->prev = NULL;
+  }
 
   return(e);
 }
@@ -122,7 +123,7 @@ void __node_free_f(const list_t *l, list_node_t *e)
 {
   llist_t *ll = (llist_t *) l->impl;
   if (e->data!=NULL)
-    gvalue_destroy(e->data);
+  { ll->mem_free(e->data); }
   ll->mem_free(e);
 }
 
@@ -133,14 +134,14 @@ void __remove_f(const list_t *l, list_node_t *e)
   list_node_t *prev = e->prev;
   list_node_t *next = e->next;
   if (prev != NULL)
-    prev->next = next;
+  { prev->next = next; }
   if (next != NULL)
-    next->prev = prev;
+  { next->prev = prev; }
 
   if (e == ll->head)
-    ll->head = next;
+  { ll->head = next; }
   if (e == ll->last)
-    ll->last = prev;
+  { ll->last = prev; }
 
   ll->size -= 1;
 }
@@ -155,7 +156,7 @@ void __insert_after_f(list_t *l, list_node_t *p, list_node_t *e)
   {
     e->next = p->next;
     if (p->next != NULL)
-      p->next->prev = e;
+    { p->next->prev = e; }
     p->next = e;
   }
   else if (ll->size == 0)
@@ -165,7 +166,7 @@ void __insert_after_f(list_t *l, list_node_t *p, list_node_t *e)
   }
 
   if (p == ll->last)
-    ll->last = e;
+  { ll->last = e; }
 
   ll->size += 1;
 }
@@ -180,7 +181,7 @@ void __insert_before_f(list_t *l, list_node_t *p, list_node_t *e)
   {
     e->prev = p->prev;
     if (p->prev != NULL)
-      p->prev->next = e;
+    {  p->prev->next = e; }
     p->prev = e;
   }
   else if (ll->size == 0)
@@ -190,46 +191,51 @@ void __insert_before_f(list_t *l, list_node_t *p, list_node_t *e)
   }
 
   if (p == ll->head)
-    ll->head = e;
+  { ll->head = e; }
 
   ll->size += 1;
 }
 
 inline
-list_t *llist_init()
-{
-  return(llist_init_with(malloc, free));
-}
+list_t *llist_init(type_t type)
+{ return(llist_init_with(type, malloc, free)); }
 
-list_t *llist_init_with(init_f myinit, free_f myfree)
+list_t *llist_init_with(type_t type, init_f myinit, free_f myfree)
 {
   list_t *l   = (list_t *) myinit(sizeof(list_t));
   llist_t *ll = (llist_t *) myinit(sizeof(llist_t));
-
-  ensure(l!=NULL, "memory error");
-  ensure(ll!=NULL, "memory error");
-
+  L_GOTOIF(l == NULL, exit_failure);
+  L_GOTOIF(ll == NULL, exit_failure);
+  
   ll->head     = NULL;
   ll->last     = NULL;
   ll->size     = 0;
   ll->mem_init = myinit;
   ll->mem_free = myfree;
 
-  l->head = __head_f;
-  l->last = __last_f;
-  l->at   = __at_f;
-  l->size = __size_f;
-  l->get  = __get_f;
-  l->next = __next_f;
-  l->prev = __prev_f;
-  l->node_init = __node_init_f;
-  l->node_free = __node_free_f;
-  l->remove = __remove_f;
-  l->insert_after = __insert_after_f;
+  l->type          = type;
+  l->head          = __head_f;
+  l->last          = __last_f;
+  l->at            = __at_f;
+  l->size          = __size_f;
+  l->get           = __get_f;
+  l->next          = __next_f;
+  l->prev          = __prev_f;
+  l->node_init     = __node_init_f;
+  l->node_free     = __node_free_f;
+  l->remove        = __remove_f;
+  l->insert_after  = __insert_after_f;
   l->insert_before = __insert_before_f;
-  l->impl = ll;
+  l->impl          = ll;
 
   return(l);
+
+exit_failure:
+  if (ll != NULL)
+  { myfree(ll); }
+  if (l != NULL)
+  { myfree(l); }
+  return(NULL);
 }
 
 void llist_destroy(list_t *l)

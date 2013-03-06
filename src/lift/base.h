@@ -40,6 +40,8 @@
 
 EXTERN_C_OPEN
 
+#define L_GOTOIF(p, j) if (p) { goto j; }
+
 /*! The function responsible for allocating memory. Should provide
  *  same semantics as malloc.
  */
@@ -50,10 +52,10 @@ typedef void *(*init_f)(size_t);
  */
 typedef void (*free_f)(void *);
 
-/*! Function to assert some condition and to exit the program if this
- *  are not met.
+/*! Duplicates a given memory region. Should provide same semantics as
+ *  same of init + memcpy.
  */
-void ensure(bool c, const char *m);
+typedef void *(*dup_f)(void *, size_t);
 
 EXTERN_C_CLOSE
 

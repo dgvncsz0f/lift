@@ -24,43 +24,110 @@
 /* OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE   */
 /* OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.            */
 
-#ifndef __LIFT_ALGO_SEARCH__
-#define __LIFT_ALGO_SEARCH__
-
-#include <lift/base.h>
 #include <lift/list.h>
 
-EXTERN_C_OPEN
+inline
+bool list_append(list_t *l, const void *data)
+{ return(list_insert_after(l, list_last(l), data)); }
 
-#define NOT_FOUND (-1)
+inline
+bool list_prepend(list_t *l, const void *data)
+{ return(list_insert_before(l, list_head(l), data)); }
 
-/*! Executes a binary search on a given list.
- * N.B.: This requires the list to be sorted.
- *
- * \param xs The list to perform the search on;
- * \param x The element you are looking for;
- * \return The index at which the element is located or NOT_FOUND.
- */
-int binary_search(const list_t *xs, const gvalue_t *x);
+inline
+bool list_insert_after(list_t *l, list_node_t *e, const void *data)
+{
+  list_node_t *elem = l->node_init(l, data);
+  if (elem != NULL)
+  { l->insert_after(l, e, elem); }
+  return(elem != NULL);
+}
 
-/*! Finds the least element
- * N.B: Obviously this assumes a non sorted list.
- *
- * \param start,end The range to perform the search on;
- * \param f The function that compare two eleemnts;
- * \return The index at which the least element was found. Returns NOT_FOUND when the list is empty
- */
-list_node_t *least_elem(const list_t *l, list_node_t *start, list_node_t *end);
+inline
+bool list_insert_before(list_t *l, list_node_t *e, const void *data)
+{
+  list_node_t *elem = l->node_init(l, data);
+  if (elem != NULL)
+  { l->insert_before(l, e, elem); }
+  return(elem != NULL);
+}
 
-/*! Finds the greatest element.
- * N.B: Obviously this assumes a non sorted list.
- *
- * \param start,end The range to perform the search on;
- * \param f The function that compare two eleemnts;
- * \return The index at which the greatest element was found. Returns NOT_FOUND when the list is empty
- */
-list_node_t *greatest_elem(const list_t *l, list_node_t *start, list_node_t *end);
+inline
+list_node_t *list_head(const list_t *l)
+{
+  return(l->head(l));
+}
 
-EXTERN_C_CLOSE
+inline
+list_node_t *list_last(const list_t *l)
+{ return(l->last(l)); }
 
-#endif
+inline
+list_node_t *list_at(const list_t *l, int o_)
+{
+  int s = list_size(l);
+  int o = (s==0 ? 0 : (o_%s+s)%s);
+  return(l->at(l, o));
+}
+
+inline
+const void *list_get_data(const list_t *l, const list_node_t *e)
+{ return(l->get(l, e)); }
+
+inline
+int list_size(const list_t *l)
+{ return(l->size(l)); }
+
+inline
+bool list_empty(const list_t *l)
+{ return(list_size(l) == 0); }
+
+inline
+void list_remove(list_t *l, list_node_t *e)
+{
+  l->remove(l, e);
+  l->node_free(l, e);
+}
+
+void list_remove_range(list_t *l, list_node_t *s, list_node_t *e)
+{
+  list_node_t *tmp;
+  while (s != e)
+  {
+    tmp = s;
+    s   = list_next(l, s);
+    list_remove(l, tmp);
+  };
+  list_remove(l, e);
+}
+
+inline
+void list_clear(list_t *l)
+{
+  if (!list_empty(l))
+  { list_remove_range(l, list_head(l), list_last(l)); }
+}
+
+inline
+void list_pop(list_t *l)
+{
+  list_node_t *head = list_head(l);
+  if (head != NULL)
+  {  list_remove(l, head); }
+}
+
+inline
+void list_rpop(list_t *l)
+{
+  list_node_t *last = list_last(l);
+  if (last != NULL)
+  { list_remove(l, last); }
+}
+
+inline
+list_node_t *list_next(const list_t *l, const list_node_t *e)
+{ return(l->next(l, e)); }
+
+inline
+list_node_t *list_prev(const list_t *l, const list_node_t *e)
+{ return(l->prev(l, e)); }

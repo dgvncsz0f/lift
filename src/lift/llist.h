@@ -23,85 +23,30 @@
 /* CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,   */
 /* OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE   */
 /* OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.            */
+#ifndef __LIFT_LLIST__
+#define __LIFT_LLIST__
 
-#include <lift/algo/search.h>
+#include <lift/base.h>
+#include <lift/list.h>
+#include <lift/type.h>
 
-static
-bool __is_least(const gvalue_t *a, const gvalue_t *b)
-{
-  if (a == NULL)
-    return(false);
-  if (b == NULL)
-    return(true);
-  else
-    return(gvalue_compare(a, b) == LT);
-}
+/*! Provides the implementation of a doubly-linked list.
+ */
 
-static
-bool __is_greatest(const gvalue_t *a, const gvalue_t *b)
-{
-  if (a == NULL)
-    return(false);
-  if (b == NULL)
-    return(true);
-  else
-    return(gvalue_compare(a, b) == GT);
-}
+EXTERN_C_OPEN
 
-static inline
-list_node_t *__find_elem(const list_t *l, list_node_t *start, list_node_t *end, bool (*f)(const gvalue_t *, const gvalue_t *))
-{
-  gvalue_t *tmp_a, *tmp_b;
-  list_node_t *found = NULL;
+/*! Creates a new empty linked list using malloc.
+ */
+list_t *llist_init(type_t);
 
-  while (start!=NULL)
-  {
-    tmp_a = (found==NULL ? NULL : list_get_data(l, found));
-    tmp_b = list_get_data(l, start);
-    found = (f(tmp_a, tmp_b) ? found : start);
+/*! Creates a new empty linked list using a custom memory manager.
+ */
+list_t *llist_init_with(type_t, init_f f0, free_f f1);
 
-    if (start == end)
-      break;
-    else
-      start = list_next(l, start);
-  }
+/*! Free memory used by the linked list.
+ */
+void llist_destroy(list_t *l);
 
-  return(found);
-}
+EXTERN_C_CLOSE
 
-int binary_search(const list_t *xs, const gvalue_t *x)
-{
-  int low  = 0;
-  int high = list_size(xs);
-  int mid, cmp;
-  list_node_t *tmp;
-
-  if (high == 0)
-    return(NOT_FOUND);
-
-  while (low<=high)
-  {
-    mid = low + ((high-low) >> 1);
-    tmp = list_at(xs, mid);
-    cmp = gvalue_compare(x, list_get_data(xs, tmp));
-
-    if (cmp == EQ)
-      return(mid);
-    else if (cmp == LT)
-      high = mid - 1;
-    else /* if (cmp == GT) */
-      low = mid + 1;
-  }
-
-  return(NOT_FOUND);
-}
-
-list_node_t *least_elem(const list_t *l, list_node_t *start, list_node_t *end)
-{
-  return(__find_elem(l, start, end, __is_least));
-}
-
-list_node_t *greatest_elem(const list_t *l, list_node_t *start, list_node_t *end)
-{
-  return(__find_elem(l, start, end, __is_greatest));
-}
+#endif

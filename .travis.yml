@@ -1,0 +1,9 @@
+language: C
+
+compiler:
+  - gcc
+  - clang
+
+install: make .boostrap
+
+script: make test
