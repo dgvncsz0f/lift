@@ -80,6 +80,7 @@ struct type_t
 
 void *type_dup(const type_t *, const void *, init_f init);
 
+type_t type_any();
 type_t type_char();
 type_t type_int();
 type_t type_uint8();

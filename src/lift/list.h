@@ -29,8 +29,8 @@
 
 #include <stdlib.h>
 #include <stdbool.h>
-#include <lift/base.h>
-#include <lift/type.h>
+#include "lift/base.h"
+#include "lift/type.h"
 
 EXTERN_C_OPEN
 

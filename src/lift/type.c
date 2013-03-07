@@ -160,6 +160,16 @@ void *type_dup(const type_t *t, const void *data, init_f alloc)
   return(ddata);
 }
 
+/* type_t type_any() */
+/* { */
+/*   type_t t; */
+/*   t.size_t   = NULL; */
+/*   t.ord_e    = NULL; */
+/*   t.equals   = NULL; */
+/*   t.hashcode = NULL; */
+/*   return(t); */
+/* } */
+
 type_t type_int()
 { TEMPLATE_TYPE_FUNCTION(int, __sizeof_int, __compare_int); }
 

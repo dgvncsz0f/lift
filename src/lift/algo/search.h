@@ -27,8 +27,8 @@
 #ifndef __LIFT_ALGO_SEARCH__
 #define __LIFT_ALGO_SEARCH__
 
-#include <lift/base.h>
-#include <lift/list.h>
+#include "lift/base.h"
+#include "lift/list.h"
 
 EXTERN_C_OPEN
 

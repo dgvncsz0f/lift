@@ -24,7 +24,7 @@
 /* OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE   */
 /* OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.            */
 
-#include <lift/algo/search.h>
+#include "lift/algo/search.h"
 
 static
 bool __is_least(const type_t *type, const void *a, const void *b)

@@ -24,7 +24,7 @@
 /* OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE   */
 /* OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.            */
 
-#include <lift/list.h>
+#include "lift/list.h"
 
 inline
 bool list_append(list_t *l, const void *data)

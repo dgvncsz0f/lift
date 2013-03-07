@@ -26,9 +26,9 @@
 #ifndef __LIFT_LLIST__
 #define __LIFT_LLIST__
 
-#include <lift/base.h>
-#include <lift/list.h>
-#include <lift/type.h>
+#include "lift/base.h"
+#include "lift/list.h"
+#include "lift/type.h"
 
 /*! Provides the implementation of a doubly-linked list.
  */
