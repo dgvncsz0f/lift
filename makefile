@@ -47,10 +47,13 @@ S_OBJFILES    = $(subst .c,.o,$(SRCFILES))
 T_OBJFILES    = $(subst .cc,.o,$(TRYFILES))
 
 .bootstrap:
-	mkdir $(srcroot)/tmp
-	(cd $(srcroot)/tmp && $(bin_unzip) -q $(srcroot)/lib/unittest-cpp-1.4.zip)
-	$(MAKE) -C $(srcroot)/tmp/UnitTest++ libUnitTest++.a
-	touch .bootstrap
+	if [ ! -f $(srcroot)/tmp/UnitTest++/libUnitTest++.a ];                        \
+        then                                                                          \
+          rm -r -f $(srcroot)/tmp                                                     \
+          mkdir $(srcroot)/tmp;                                                       \
+          cd $(srcroot)/tmp && $(bin_unzip) -q $(srcroot)/lib/unittest-cpp-1.4.zip;   \
+          $(MAKE) -C $(srcroot)/tmp/UnitTest++ libUnitTest++.a;                       \
+        fi
 
 test: compile
 test: compile-test
@@ -67,7 +70,6 @@ compile-test: $(T_OBJFILES)
 clean:
 	$(bin_find) $(srcroot)/src -name \*.o -type f -exec rm -f \{\} \;
 	$(bin_find) $(srcroot)/try -name \*.o -type f -exec rm -f \{\} \;
-	rm -f .bootstrap
 	rm -r -f tmp
 	rm -f $(srcroot)/try/run_tests
 
