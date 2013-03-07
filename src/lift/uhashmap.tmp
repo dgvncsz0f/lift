@@ -1,0 +1,169 @@
+/* Copyright (c) 2013, Diego Souza                                                 */
+/* All rights reserved.                                                            */
+
+/* Redistribution and use in source and binary forms, with or without              */
+/* modification, are permitted provided that the following conditions are met:     */
+
+/*   * Redistributions of source code must retain the above copyright notice,      */
+/*     this list of conditions and the following disclaimer.                       */
+/*   * Redistributions in binary form must reproduce the above copyright notice,   */
+/*     this list of conditions and the following disclaimer in the documentation   */
+/*     and/or other materials provided with the distribution.                      */
+/*   * Neither the name of the <ORGANIZATION> nor the names of its contributors    */
+/*     may be used to endorse or promote products derived from this software       */
+/*     without specific prior written permission.                                  */
+
+/* THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND */
+/* ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED   */
+/* WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE          */
+/* DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE    */
+/* FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL      */
+/* DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR      */
+/* SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER      */
+/* CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,   */
+/* OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE   */
+/* OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.            */
+
+#include <assert.h>
+#include "lift/hashmap.h"
+#include "lift/uhashmap.h"
+#include "lift/list.h"
+#include "lift/llist.h"
+
+struct hashmap_entry_t
+{
+  void *key;
+  void *val;
+};
+
+typedef struct
+{
+  size_t e_size;             // number of elements
+  size_t b_size;             // available buckets. must be a power of 2
+  llist_t **buckets;
+  init_f mem_init;
+  free_f mem_free;
+} uhashmap_t;
+
+static
+void __uhashmap_destroy_entries(list_t **buckets, size_t b_size)
+{
+  for (size_t k=0; k<b_size; k+=1)
+  { list_destroy(buckets[k]); }
+}
+
+static
+void __uhashmap_destroy(hashmap_t *map)
+{
+  uhashmap_t *um = (uhashmap_t *) map->impl;
+  __uhashmap_destroy_entries(um->buckets, um->b_size);
+  um->mem_free(um->buckets);
+  um->mem_free(map);
+  um->mem_free(um);
+}
+
+static
+bool __uhashmap_reallocate(list_t **buckets, size_t b_size, hashmap_t *m)
+{
+  uhashmap_t *um    = (uhashmap_t *) m->impl;
+  uhashmap_t tmp_um = { 0, b_size,
+                        um->buckets,
+                        NULL,
+                        NULL,
+                      };
+  hashmap_t tmp_m   = { m->k_type,
+                        m->v_type,
+                        NULL,
+                        NULL,
+                        NULL,
+                        NULL,
+                        NULL,
+                        NULL,
+                        NULL,
+                        NULL,
+                        NULL,
+                        NULL,
+                        &tmp_um
+                      };
+  bool success = true;
+  for (hashmap_entry_t *e=hashmap_head(m); e!=NULL; e = hashmap_next(m, e))
+  { success = success && hashmap_insert(&tmp_m, e); }
+  return(success);
+}
+
+static
+bool __uhashmap_grow(hashmap_t *m)
+{
+  uhashmap_t *um     = (uhashmap_t *) m->impl;
+  size_t o_b_size    = um->b_size;
+  list_t **o_buckets = um->buckets;
+  size_t b_size      = (um->b_size == 0 ? 2 : um->b_size * 2);
+  list_t **buckets   = um->mem_init(sizeof(list_t *) * b_size);
+  L_GOTOIF(buckets == NULL, exit_failure);
+  bool success     = true;
+  for (size_t k=0; k<b_size; k+=1)
+  {
+    buckets[k] = llist_init_with(m->v_type, um->mem_init, um->mem_free);
+    success    = success && buckets[k] != NULL;
+  }
+  L_GOTOIF(! success, exit_failure);
+  L_GOTOIF(! __uhashmap_reallocate(buckets, b_size, m), exit_failure);
+  um->buckets = buckets;
+  um->b_size  = b_size;
+  __uhashmap_destroy_entries(o_buckets, o_b_size);
+  um->mem_free(o_buckets);
+  return(true);
+
+exit_failure:
+  for (size_t k=0; k<b_size; k+=1)
+  {
+    if (buckets != NULL && buckets[k] != NULL)
+    { um->mem_free(buckets[k]); }
+  }
+  um->mem_free(buckets);
+  return(false);
+}
+
+static
+bool __uhashmap_insert(hashmap_t *m, hashmap_entry_t *e)
+{
+  uhashmap_t *um = (uhashmap_t *) m->impl;
+  if (um->e_size == 0 ||
+      (um->e_size / (float) um->b_size) > UHASHMAP_LF)
+  { __uhashmap_grow(m); }
+
+  size_t blkix = hashmap_hashcode(m, e) & (um->b_size - 1);
+  list_append(um->buckets[blkix], e);
+
+  return(false);
+}
+
+hashmap_t *uhashmap_init(type_t k_type, type_t v_type)
+{ return(uhashmap_init_with(k_type, v_type, malloc, free)); }
+
+hashmap_t *uhashmap_init_with(type_t k_type, type_t v_type, init_f myinit, free_f myfree)
+{
+  hashmap_t *m   = (hashmap_t *) myinit(sizeof(hashmap_t));
+  uhashmap_t *um = (uhashmap_t *) myinit(sizeof(uhashmap_t));
+  L_GOTOIF(m == NULL || um == NULL, exit_failure);
+
+  um->b_size      = 0;
+  um->buckets     = NULL;
+  um->mem_init    = myinit;
+  um->mem_free    = myfree;
+
+  m->k_type       = k_type;
+  m->v_type       = v_type;
+  m->hashmap_free = __uhashmap_destroy;
+  m->insert       = __uhashmap_insert;
+  m->impl         = um;
+
+  return(m);
+
+exit_failure:
+  if (um != NULL)
+  { myfree(um); }
+  else
+  { myfree(m); }
+  return(NULL);
+}
