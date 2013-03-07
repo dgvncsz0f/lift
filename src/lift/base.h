@@ -42,6 +42,12 @@ EXTERN_C_OPEN
 
 #define L_GOTOIF(p, j) if (p) { goto j; }
 
+typedef struct
+{
+  void *fst;
+  void *snd;
+} tuple_t;
+
 /*! The function responsible for allocating memory. Should provide
  *  same semantics as malloc.
  */
