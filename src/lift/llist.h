@@ -43,10 +43,6 @@ list_t *llist_init(type_t);
  */
 list_t *llist_init_with(type_t, init_f f0, free_f f1);
 
-/*! Free memory used by the linked list.
- */
-void llist_destroy(list_t *l);
-
 EXTERN_C_CLOSE
 
 #endif

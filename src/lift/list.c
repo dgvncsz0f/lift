@@ -131,3 +131,6 @@ list_node_t *list_next(const list_t *l, const list_node_t *e)
 inline
 list_node_t *list_prev(const list_t *l, const list_node_t *e)
 { return(l->prev(l, e)); }
+
+void list_destroy(list_t *l)
+{ l->list_free(l); }

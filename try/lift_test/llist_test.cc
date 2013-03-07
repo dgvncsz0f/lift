@@ -40,7 +40,7 @@ namespace lift_test
     list_append(l, NULL);
     CHECK(NULL != list_head(l));
     CHECK(list_head(l) == list_last(l));
-    llist_destroy(l);
+    list_destroy(l);
   }
 
   TEST(list_append_preserves_head)
@@ -53,7 +53,7 @@ namespace lift_test
     list_append(l, NULL);
     CHECK(e == list_head(l));
 
-    llist_destroy(l);
+    list_destroy(l);
   }
 
   // prepend
@@ -64,7 +64,7 @@ namespace lift_test
     list_prepend(l, NULL);
     CHECK(NULL != list_last(l));
     CHECK(list_last(l) == list_head(l));
-    llist_destroy(l);
+    list_destroy(l);
   }
 
   TEST(list_prepend_preserves_tail)
@@ -77,7 +77,7 @@ namespace lift_test
     list_prepend(l, NULL);
     CHECK(e == list_last(l));
 
-    llist_destroy(l);
+    list_destroy(l);
   }
 
   // head
@@ -85,7 +85,7 @@ namespace lift_test
   {
     list_t *l = llist_init(type_int());
     CHECK(NULL == list_head(l));
-    llist_destroy(l);
+    list_destroy(l);
   }
 
   // last
@@ -93,7 +93,7 @@ namespace lift_test
   {
     list_t *l = llist_init(type_int());
     CHECK(NULL == list_last(l));
-    llist_destroy(l);
+    list_destroy(l);
   }
 
   TEST(list_last_and_list_head_are_the_same_when_list_is_singleton)
@@ -101,7 +101,7 @@ namespace lift_test
     list_t *l = llist_init(type_int());
     list_append(l, NULL);
     CHECK(list_head(l) == list_last(l));
-    llist_destroy(l);
+    list_destroy(l);
   }
 
   // at
@@ -109,7 +109,7 @@ namespace lift_test
   {
     list_t *l = llist_init(type_int());
     CHECK(NULL == list_at(l, 0));
-    llist_destroy(l);
+    list_destroy(l);
   }
 
   TEST(list_at_returns_the_element_at_a_given_index)
@@ -119,7 +119,7 @@ namespace lift_test
     list_append(l, NULL);
     CHECK(list_at(l, 0) == list_head(l));
     CHECK(list_at(l, 1) == list_last(l));
-    llist_destroy(l);
+    list_destroy(l);
   }
 
   TEST(list_at_works_with_numbers_that_exceeds_list_size)
@@ -131,7 +131,7 @@ namespace lift_test
     CHECK(list_at(l, 0) == list_at(l, 2));
     CHECK(list_at(l, 1) == list_at(l, 3));
 
-    llist_destroy(l);
+    list_destroy(l);
   }
 
   TEST(list_at_works_with_negative_numbers)
@@ -143,7 +143,7 @@ namespace lift_test
     CHECK(list_at(l, -1) == list_last(l));
     CHECK(list_at(l, -2) == list_head(l));
 
-    llist_destroy(l);
+    list_destroy(l);
   }
 
   TEST(list_at_works_with_negative_numbers_that_exceeds_list_size)
@@ -155,7 +155,7 @@ namespace lift_test
     CHECK(list_at(l, -1) == list_at(l, -3));
     CHECK(list_at(l, -2) == list_at(l, -4));
 
-    llist_destroy(l);
+    list_destroy(l);
   }
 
   // size
@@ -165,7 +165,7 @@ namespace lift_test
 
     CHECK(0 == list_size(l));
 
-    llist_destroy(l);
+    list_destroy(l);
   }
 
   TEST(list_size_returns_the_correct_number_of_elements)
@@ -176,7 +176,7 @@ namespace lift_test
 
     CHECK(2 == list_size(l));
     
-    llist_destroy(l);
+    list_destroy(l);
   }
 
   // empty
@@ -186,7 +186,7 @@ namespace lift_test
 
     CHECK(list_empty(l));
 
-    llist_destroy(l);
+    list_destroy(l);
   }
 
   TEST(list_insert_after_with_head_does_not_change_head_nor_last)
@@ -203,7 +203,7 @@ namespace lift_test
     CHECK(last == list_last(l));
     CHECK(3 == list_size(l));
 
-    llist_destroy(l);
+    list_destroy(l);
   }
 
   TEST(list_insert_after_with_the_last_element_changes_the_tail)
@@ -220,7 +220,7 @@ namespace lift_test
     CHECK(last != list_last(l));
     CHECK(3    == list_size(l));
 
-    llist_destroy(l);
+    list_destroy(l);
   }
 
   // list_insert_before
@@ -238,7 +238,7 @@ namespace lift_test
     CHECK(last == list_last(l));
     CHECK(3 == list_size(l));
 
-    llist_destroy(l);
+    list_destroy(l);
   }
 
   TEST(list_insert_before_with_tail_preserves_both_head_and_tail)
@@ -255,7 +255,7 @@ namespace lift_test
     CHECK(last == list_last(l));
     CHECK(3 == list_size(l));
 
-    llist_destroy(l);
+    list_destroy(l);
   }
 
   // list_remove
@@ -268,7 +268,7 @@ namespace lift_test
     list_remove(l, list_head(l));
     CHECK(0 == list_size(l));
 
-    llist_destroy(l);
+    list_destroy(l);
   }
 
   TEST(list_remove_changes_head_when_this_is_removed)
@@ -284,7 +284,7 @@ namespace lift_test
     list_remove(l, head);
     CHECK(last == list_head(l));
 
-    llist_destroy(l);
+    list_destroy(l);
   }
 
   TEST(list_remove_changes_last_when_this_is_removed)
@@ -300,7 +300,7 @@ namespace lift_test
     list_remove(l, last);
     CHECK(head == list_last(l));
 
-    llist_destroy(l);
+    list_destroy(l);
   }
 
   TEST(list_remove_preserves_both_head_and_last_if_element_is_in_the_middle)
@@ -320,7 +320,7 @@ namespace lift_test
     CHECK(head == list_head(l));
     CHECK(last == list_last(l));
 
-    llist_destroy(l);
+    list_destroy(l);
   }
 
   // get
@@ -335,7 +335,7 @@ namespace lift_test
 
     CHECK(10 == *v);
 
-    llist_destroy(l);
+    list_destroy(l);
   }
 
   // clear
@@ -347,7 +347,7 @@ namespace lift_test
     list_clear(l);
     CHECK(0 == list_size(l));
 
-    llist_destroy(l);
+    list_destroy(l);
   }
 
   TEST(list_clear_erases_all_elements)
@@ -362,7 +362,7 @@ namespace lift_test
     CHECK(NULL == list_head(l));
     CHECK(NULL == list_last(l));
 
-    llist_destroy(l);
+    list_destroy(l);
   }
 
   // remove_range
@@ -378,7 +378,7 @@ namespace lift_test
     CHECK(NULL == list_head(l));
     CHECK(NULL == list_last(l));
 
-    llist_destroy(l);
+    list_destroy(l);
   }
 
   TEST(remove_range_should_clear_singleton_lists)
@@ -389,7 +389,7 @@ namespace lift_test
     list_remove_range(l, list_head(l), list_last(l));
     CHECK(0 == list_size(l));
 
-    llist_destroy(l);
+    list_destroy(l);
   }
 
   TEST(remove_range_should_not_touch_the_head_nor_last_if_the_range_does_not_include_them)
@@ -407,7 +407,7 @@ namespace lift_test
     CHECK(head == list_head(l));
     CHECK(last == list_last(l));
 
-    llist_destroy(l);
+    list_destroy(l);
   }
 
   // pop
@@ -419,7 +419,7 @@ namespace lift_test
     list_pop(l);
     CHECK(0 == list_size(l));
 
-    llist_destroy(l);
+    list_destroy(l);
   }
 
   TEST(list_pop_changes_head_for_non_empty_lists)
@@ -433,7 +433,7 @@ namespace lift_test
 
     CHECK(last == list_head(l));
 
-    llist_destroy(l);
+    list_destroy(l);
   }
 
   TEST(list_pop_reduces_list_length)
@@ -444,7 +444,7 @@ namespace lift_test
     list_pop(l);
     CHECK(0 == list_size(l));
 
-    llist_destroy(l);
+    list_destroy(l);
   }
 
   // rpop
@@ -456,7 +456,7 @@ namespace lift_test
     list_rpop(l);
     CHECK(0 == list_size(l));
 
-    llist_destroy(l);
+    list_destroy(l);
   }
 
   TEST(list_rpop_changes_last_for_non_empty_lists)
@@ -470,7 +470,7 @@ namespace lift_test
 
     CHECK(head == list_last(l));
 
-    llist_destroy(l);
+    list_destroy(l);
   }
 
   TEST(list_rpop_reduces_list_length)
@@ -481,7 +481,7 @@ namespace lift_test
     list_rpop(l);
     CHECK(0 == list_size(l));
 
-    llist_destroy(l);
+    list_destroy(l);
   }
 
   // next
@@ -492,7 +492,7 @@ namespace lift_test
 
     CHECK(NULL == list_next(l, list_last(l)));
 
-    llist_destroy(l);
+    list_destroy(l);
   }
 
   TEST(list_next_returns_NULL_on_last)
@@ -502,7 +502,7 @@ namespace lift_test
 
     CHECK(NULL == list_next(l, list_last(l)));
 
-    llist_destroy(l);
+    list_destroy(l);
   }
 
   TEST(list_next_returns_elements_in_insertion_order)
@@ -513,7 +513,7 @@ namespace lift_test
 
     CHECK(list_last(l) == list_next(l, list_head(l)));
 
-    llist_destroy(l);
+    list_destroy(l);
   }
 
   // prev
@@ -524,7 +524,7 @@ namespace lift_test
 
     CHECK(NULL == list_prev(l, list_head(l)));
 
-    llist_destroy(l);
+    list_destroy(l);
   }
 
   TEST(list_head_returns_NULL_on_head)
@@ -534,7 +534,7 @@ namespace lift_test
 
     CHECK(NULL == list_prev(l, list_head(l)));
 
-    llist_destroy(l);
+    list_destroy(l);
   }
 
   TEST(list_head_returns_elements_in_insertion_order)
@@ -545,6 +545,6 @@ namespace lift_test
 
     CHECK(list_head(l) == list_prev(l, list_last(l)));
 
-    llist_destroy(l);
+    list_destroy(l);
   }
 }

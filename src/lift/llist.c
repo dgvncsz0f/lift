@@ -126,6 +126,15 @@ void __node_free_f(const list_t *l, list_node_t *e)
 }
 
 static
+void __llist_destroy(list_t *l)
+{
+  llist_t *ll = (llist_t *) l->impl;
+  list_clear(l);
+  ll->mem_free(l);
+  ll->mem_free(ll);
+}
+
+static
 void __remove_f(const list_t *l, list_node_t *e)
 {
   llist_t *ll = (llist_t *) l->impl;
@@ -220,6 +229,7 @@ list_t *llist_init_with(type_t type, init_f myinit, free_f myfree)
   l->prev          = __prev_f;
   l->node_init     = __node_init_f;
   l->node_free     = __node_free_f;
+  l->list_free     = __llist_destroy;
   l->remove        = __remove_f;
   l->insert_after  = __insert_after_f;
   l->insert_before = __insert_before_f;
@@ -233,12 +243,4 @@ exit_failure:
   if (l != NULL)
   { myfree(l); }
   return(NULL);
-}
-
-void llist_destroy(list_t *l)
-{
-  llist_t *ll = (llist_t *) l->impl;
-  list_clear(l);
-  ll->mem_free(l);
-  ll->mem_free(ll);
 }

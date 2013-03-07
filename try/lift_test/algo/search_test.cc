@@ -49,7 +49,7 @@ namespace lift_test
       tmp = 4; list_append(ll, &tmp);
 
       CHECK(1 == binary_search(ll, &elem));
-      llist_destroy(ll);
+      list_destroy(ll);
     }
 
     TEST(binary_search_should_return_NOT_FOUND_if_the_element_is_not_on_the_list)
@@ -64,7 +64,7 @@ namespace lift_test
       tmp = 3; list_append(ll, &tmp);
 
       CHECK(NOT_FOUND == binary_search(ll, &elem));
-      llist_destroy(ll);
+      list_destroy(ll);
     }
 
     TEST(binary_search_should_return_NOT_FOUND_when_the_list_is_empty)
@@ -73,7 +73,7 @@ namespace lift_test
       list_t *ll  = llist_init(type_int());
 
       CHECK(NOT_FOUND == binary_search(ll, &elem));
-      llist_destroy(ll);
+      list_destroy(ll);
     }
 
     TEST(least_elem_on_the_entire_list_returns_the_minimum)
@@ -88,7 +88,7 @@ namespace lift_test
       tmp = 4; list_append(ll, &tmp);
 
       CHECK(list_head(ll) == least_elem(ll, list_head(ll), list_last(ll)));
-      llist_destroy(ll);
+      list_destroy(ll);
     }
 
     TEST(least_elem_on_the_empty_list_returns_NULL)
@@ -96,7 +96,7 @@ namespace lift_test
       list_t *ll  = llist_init(type_int());
 
       CHECK(NULL == least_elem(ll, list_head(ll), list_last(ll)));
-      llist_destroy(ll);
+      list_destroy(ll);
     }
 
     TEST(least_elem_on_unordered_list_also_returns_the_minimum)
@@ -111,7 +111,7 @@ namespace lift_test
       tmp = 2; list_append(ll, &tmp);
 
       CHECK(list_prev(ll, list_last(ll)) == least_elem(ll, list_head(ll), list_last(ll)));
-      llist_destroy(ll);
+      list_destroy(ll);
     }
 
     TEST(greatest_elem_on_the_entire_list_returns_the_maximum)
@@ -126,7 +126,7 @@ namespace lift_test
       tmp = 4; list_append(ll, &tmp);
 
       CHECK(list_last(ll) == greatest_elem(ll, list_head(ll), list_last(ll)));
-      llist_destroy(ll);
+      list_destroy(ll);
     }
 
     TEST(greatest_elem_on_unordered_list_also_returns_the_maximum)
@@ -141,7 +141,7 @@ namespace lift_test
       tmp = 2; list_append(ll, &tmp);
 
       CHECK(list_next(ll, list_head(ll)) == greatest_elem(ll, list_head(ll), list_last(ll)));
-      llist_destroy(ll);
+      list_destroy(ll);
     }
 
     TEST(greatest_elem_on_the_empty_list_returns_NULL)
@@ -149,7 +149,7 @@ namespace lift_test
       list_t *ll = llist_init(type_int());
 
       CHECK(NULL == greatest_elem(ll, list_head(ll), list_last(ll)));
-      llist_destroy(ll);
+      list_destroy(ll);
     }
   }
 

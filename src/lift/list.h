@@ -55,6 +55,7 @@ struct list_t
   /* memory management */
   list_node_t *(*node_init)     (const list_t *, const void *data);
   void         (*node_free)     (const list_t *, list_node_t *);
+  void         (*list_free)     (list_t *);
 
   /* updates */
   void         (*remove)        (const list_t *, list_node_t *);         
@@ -196,6 +197,10 @@ list_node_t *list_next(const list_t *l, const list_node_t *e);
  * \return The previous element of NULL;
  */
 list_node_t *list_prev(const list_t *l, const list_node_t *e);
+
+/*! Releases all memory associated with this list
+ */
+void list_destroy(list_t *);
 
 EXTERN_C_CLOSE
 
