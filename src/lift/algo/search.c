@@ -49,10 +49,10 @@ bool __is_greatest(const type_t *type, const void *a, const void *b)
 }
 
 static inline
-list_node_t *__find_elem(const list_t *l, list_node_t *start, list_node_t *end, bool (*f) (const type_t *, const void *, const void *b))
+const list_node_t *__find_elem(const list_t *l, const list_node_t *start, const list_node_t *end, bool (*f) (const type_t *, const void *, const void *b))
 {
   const void *tmp_a, *tmp_b;
-  list_node_t *found = NULL;
+  const list_node_t *found = NULL;
 
   while (start!=NULL)
   {
@@ -74,7 +74,7 @@ int binary_search(const list_t *xs, const void *x)
   int low  = 0;
   int high = list_size(xs);
   int mid, cmp;
-  list_node_t *tmp;
+  const list_node_t *tmp;
 
   if (high == 0)
   { return(NOT_FOUND); }
@@ -96,8 +96,8 @@ int binary_search(const list_t *xs, const void *x)
   return(NOT_FOUND);
 }
 
-list_node_t *least_elem(const list_t *l, list_node_t *start, list_node_t *end)
+const list_node_t *least_elem(const list_t *l, const list_node_t *start, const list_node_t *end)
 { return(__find_elem(l, start, end, __is_least)); }
 
-list_node_t *greatest_elem(const list_t *l, list_node_t *start, list_node_t *end)
+const list_node_t *greatest_elem(const list_t *l, const list_node_t *start, const list_node_t *end)
 { return(__find_elem(l, start, end, __is_greatest)); }

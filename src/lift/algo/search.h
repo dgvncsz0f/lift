@@ -50,7 +50,7 @@ int binary_search(const list_t *xs, const void *x);
  * \param f The function that compare two eleemnts;
  * \return The index at which the least element was found. Returns NOT_FOUND when the list is empty
  */
-list_node_t *least_elem(const list_t *l, list_node_t *start, list_node_t *end);
+const list_node_t *least_elem(const list_t *l, const list_node_t *start, const list_node_t *end);
 
 /*! Finds the greatest element.
  * N.B: Obviously this assumes a non sorted list.
@@ -59,7 +59,7 @@ list_node_t *least_elem(const list_t *l, list_node_t *start, list_node_t *end);
  * \param f The function that compare two eleemnts;
  * \return The index at which the greatest element was found. Returns NOT_FOUND when the list is empty
  */
-list_node_t *greatest_elem(const list_t *l, list_node_t *start, list_node_t *end);
+const list_node_t *greatest_elem(const list_t *l, const list_node_t *start, const list_node_t *end);
 
 EXTERN_C_CLOSE
 
