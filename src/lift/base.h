@@ -44,8 +44,8 @@ EXTERN_C_OPEN
 
 typedef struct
 {
-  void *fst;
-  void *snd;
+  const void *fst;
+  const void *snd;
 } tuple_t;
 
 /*! The function responsible for allocating memory. Should provide

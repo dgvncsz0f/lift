@@ -198,8 +198,6 @@ list_node_t *list_next(const list_t *l, const list_node_t *e);
  */
 list_node_t *list_prev(const list_t *l, const list_node_t *e);
 
-/*! Releases all memory associated with this list
- */
 void list_destroy(list_t *);
 
 EXTERN_C_CLOSE

@@ -61,8 +61,13 @@ struct hashmap_t
   void *impl;
 };
 
-/*! Performs the lookup of a given key.
- *
+/*! Performs the lookup of a given key. The key and value can be
+ *  extracted using hashmap_entry_xxx functions:
+ *  
+ *    > e = hashmap_entry_t(m, k);
+ *    > k = hashmap_entry_key(m, e);
+ *    > v = hashmap_entry_val(m, e);
+ * 
  * \param k The key you are looking for;
  * \return The entry found or NULL;
  */
@@ -72,7 +77,7 @@ const hashmap_entry_t *hashmap_lookup(hashmap_t *, const void *k);
  *
  * \param key The key to register this value with;
  * \return The value associated with this key;
- * \return true=success false=failure
+ * \return true=success false=failure (can't allocate memory)
  */
 bool *hashmap_insert(hashmap_t *, const void *k, const void *v);
 
@@ -90,24 +95,19 @@ const hashmap_entry_t *hashmap_head(const hashmap_t *);
  */
 const hashmap_entry_t *hashmap_next(const hashmap_t *, const hashmap_entry_t *);
 
-/*! Returns a pair (key, val)
+/*! Returns a pair (key, val).
+ *
+ *   > const void *key = hashmap_entry_pair(m, e).fst;
+ *   > const void *val = hashmap_entry_pair(m, e).snd;
  */
 tuple_t hashmap_entry_pair(const hashmap_t *, const hashmap_entry_t *);
 
-/*! Returns the value.
- */
-void *hashmap_entry_value(const hashmap_t *, const hashmap_entry_t *);
+const void *hashmap_entry_value(const hashmap_t *, const hashmap_entry_t *);
 
-/*! Returns the key.
- */
-void *hashmap_entry_key(const hashmap_t *, const hashmap_entry_t *);
+const void *hashmap_entry_key(const hashmap_t *, const hashmap_entry_t *);
 
-/*! Computes the hashcode of this entry.
- */
 size_t *hashmap_hashcode(const hashmap_t *, const hashmap_entry_t *);
 
-/*! Releases all memory associated with this hashmap.
- */
 void hashmap_destroy(hashmap_t *);
 
 EXTERN_C_CLOSE

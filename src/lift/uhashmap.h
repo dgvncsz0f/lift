@@ -38,13 +38,19 @@
 
 EXTERN_C_OPEN
 
-/*! Creates a new empty hashmap using malloc.
+/*! Creates a new empty hashmap using malloc and free.
+ *
+ * \param k The type of the keys;
+ * \param v The type of the values;
  */
-hashmap_t *uhashmap_init(type_t, type_t);
+hashmap_t *uhashmap_init(type_t k, type_t v);
 
 /*! Creates a new empty hashmap using a custom memory manager.
+ *
+ * \param k The type of the keys;
+ * \param v The type of the values;
  */
-hashmap_t *uhashmap_init_with(type_t, type_t, init_f f0, free_f f1);
+hashmap_t *uhashmap_init_with(type_t k, type_t k, init_f f0, free_f f1);
 
 EXTERN_C_CLOSE
 
