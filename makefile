@@ -70,8 +70,10 @@ compile-test: $(T_OBJFILES)
 clean:
 	$(bin_find) $(srcroot)/src -name \*.o -type f -exec rm -f \{\} \;
 	$(bin_find) $(srcroot)/try -name \*.o -type f -exec rm -f \{\} \;
-	rm -r -f tmp
 	rm -f $(srcroot)/try/run_tests
+
+.clean: clean
+	rm -r -f $(srcroot)/tmp
 
 try/run_tests: override CXXFLAGS += $(_CXXFLAGS)
 try/run_tests: override LDFLAGS  += -L$(srcroot)/tmp/UnitTest++
