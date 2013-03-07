@@ -203,8 +203,7 @@ list_t *llist_init_with(type_t type, init_f myinit, free_f myfree)
 {
   list_t *l   = (list_t *) myinit(sizeof(list_t));
   llist_t *ll = (llist_t *) myinit(sizeof(llist_t));
-  L_GOTOIF(l == NULL, exit_failure);
-  L_GOTOIF(ll == NULL, exit_failure);
+  L_GOTOIF(l == NULL || ll == NULL, exit_failure);
   
   ll->head     = NULL;
   ll->last     = NULL;
