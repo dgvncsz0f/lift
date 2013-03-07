@@ -49,7 +49,7 @@ T_OBJFILES    = $(subst .cc,.o,$(TRYFILES))
 .bootstrap:
 	if [ ! -f $(srcroot)/tmp/UnitTest++/libUnitTest++.a ];                        \
         then                                                                          \
-          rm -r -f $(srcroot)/tmp                                                     \
+          rm -r -f $(srcroot)/tmp;                                                    \
           mkdir $(srcroot)/tmp;                                                       \
           cd $(srcroot)/tmp && $(bin_unzip) -q $(srcroot)/lib/unittest-cpp-1.4.zip;   \
           $(MAKE) -C $(srcroot)/tmp/UnitTest++ libUnitTest++.a;                       \
