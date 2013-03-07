@@ -28,7 +28,6 @@
 
 typedef struct llist_t
 {
-  type_t type;
   list_node_t *head;
   list_node_t *last;
   int size;
