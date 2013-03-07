@@ -39,7 +39,6 @@ typedef struct llist_t
 struct list_node_t
 {
   void *data;
-  free_f mem_free;
   list_node_t *next;
   list_node_t *prev;
 };
